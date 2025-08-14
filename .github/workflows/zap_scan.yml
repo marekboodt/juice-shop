@@ -19,9 +19,9 @@ jobs:
           - 3000:3000
         options: >-
           --health-cmd="wget --spider -q http://localhost:3000"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+          --health-interval=20s
+          --health-timeout=20s
+          --health-retries=30
 
     steps:
       # Step 2: Wait for Juice Shop to be ready
