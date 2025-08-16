@@ -1,5 +1,5 @@
-name: ZAP Scan on Juice Shop
-# test
+name: ZAP Scan on Juice Shop (Optie A)
+
 on:
   push:
     branches:
@@ -11,49 +11,31 @@ jobs:
   zap_scan:
     runs-on: ubuntu-latest
 
-    # Step 1: Run Juice Shop as a service
     services:
       juice-shop:
         image: bkimminich/juice-shop
         ports:
           - 3000:3000
-        options: >-
-          --health-cmd="curl --fail http://localhost:3000 || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=30
 
-        
-  
     steps:
-      # Step 2: Wait for Juice Shop to be ready
-      - name: Wait for Juice Shop - extra
-        run: sleep 120
-
-      - name: Debug Juice Shop logs 1
-        if: failure()
-        run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
-        
-      - name: Wait for Juice Shop to be healthy
+      - name: Wait for Juice Shop to be ready
         run: |
+          echo "Waiting for Juice Shop to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:3000; then
+            if curl -s http://localhost:3000 > /dev/null; then
               echo "Juice Shop is up!"
               exit 0
-            else
-              echo "Waiting for Juice Shop..."
-              sleep 5
             fi
+            echo "Still waiting..."
+            sleep 5
           done
           echo "Juice Shop did not start in time"
           exit 1
 
-
-      - name: Debug Juice Shop logs 2
+      - name: Debug Juice Shop logs if failed
         if: failure()
         run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
-        
-      # Step 3: Run ZAP Baseline scan
+
       - name: Run ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
