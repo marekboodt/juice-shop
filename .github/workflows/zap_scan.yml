@@ -1,4 +1,4 @@
-name: ZAP Scan on Juice Shop (Optie B)
+name: ZAP Scan on Juice Shop (Optie A)
 
 on:
   push:
@@ -16,16 +16,11 @@ jobs:
         image: bkimminich/juice-shop
         ports:
           - 3000:3000
-        options: >-
-          --health-cmd="node /juice-shop/utils/healthcheck.js"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=30
 
     steps:
-      - name: Wait for Juice Shop health
+      - name: Wait for Juice Shop to be ready
         run: |
-          echo "Waiting for Juice Shop health status..."
+          echo "Waiting for Juice Shop to start..."
           for i in {1..30}; do
             if curl -s http://localhost:3000 > /dev/null; then
               echo "Juice Shop is up!"
@@ -34,7 +29,7 @@ jobs:
             echo "Still waiting..."
             sleep 5
           done
-          echo "Juice Shop did not become healthy in time"
+          echo "Juice Shop did not start in time"
           exit 1
 
       - name: Debug Juice Shop logs if failed
@@ -46,4 +41,10 @@ jobs:
         with:
           target: 'http://localhost:3000'
           fail_action: false
-          cmd_options: '-a'
+          cmd_options: '-a -r zap_report.html'
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: zap_report.html
