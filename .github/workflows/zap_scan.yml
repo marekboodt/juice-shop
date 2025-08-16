@@ -18,13 +18,22 @@ jobs:
         ports:
           - 3000:3000
         options: >-
-          --health-cmd="wget --spider -q http://localhost:3000/rest/user/whoami"
-          --health-interval=20s
-          --health-timeout=20s
+          --health-cmd="curl --fail http://localhost:3000 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
           --health-retries=30
 
+        
+  
     steps:
       # Step 2: Wait for Juice Shop to be ready
+      - name: Wait for Juice Shop - extra
+        run: sleep 120
+
+      - name: Debug Juice Shop logs 1
+        if: failure()
+        run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
+        
       - name: Wait for Juice Shop to be healthy
         run: |
           for i in {1..30}; do
@@ -39,6 +48,11 @@ jobs:
           echo "Juice Shop did not start in time"
           exit 1
 
+
+      - name: Debug Juice Shop logs 2
+        if: failure()
+        run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
+        
       # Step 3: Run ZAP Baseline scan
       - name: Run ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
