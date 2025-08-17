@@ -55,10 +55,11 @@ jobs:
         with:
           name: zap-reports
           path: |
-            zap_report.html
-            zap_report.xml
+            report_html.html
+            report_json.json
+            report_md.md
 
       - name: Publish ZAP JUnit Report
         uses: mikepenz/action-junit-report@v4
         with:
-          report_paths: zap_report.xml
+          report_paths: report_xml.xml
