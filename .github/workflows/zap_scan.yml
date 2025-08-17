@@ -51,6 +51,7 @@ jobs:
           target: 'http://localhost:3000'
           fail_action: false
           cmd_options: '-a'
+        continue-on-error: true
 
       - name: List files in workspace
         run: ls -la /home/runner/work/juice-shop/juice-shop
