@@ -43,6 +43,13 @@ jobs:
           fail_action: false
           cmd_options: '-a -r zap_report.html -x zap_report.xml'
 
+      - name: List files in workspace
+        run: ls -la /home/runner/work/juice-shop/juice-shop
+
+
+      - name: Find ZAP reports
+        run: find /home/runner/work/juice-shop/juice-shop -type f
+  
       - name: Upload ZAP Reports
         uses: actions/upload-artifact@v4
         with:
