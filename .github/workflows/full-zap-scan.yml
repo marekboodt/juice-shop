@@ -51,7 +51,7 @@ jobs:
         with:
           target: 'http://localhost:3000'
           fail_action: false
-          cmd_options: '-a -x report_xml.xml'
+          cmd_options: '-a -x report_xml.xml -l WARN'
         continue-on-error: true
 
       - name: List files in workspace
