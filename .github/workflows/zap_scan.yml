@@ -41,7 +41,7 @@ jobs:
         if: failure()
         run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
 
-      # --- ADD THIS STEP ---
+      # Fix permissions so ZAP can write its reports
       - name: Fix permissions for ZAP output
         run: sudo chmod -R 777 /home/runner/work/juice-shop/juice-shop
 
@@ -50,14 +50,16 @@ jobs:
         with:
           target: 'http://localhost:3000'
           fail_action: false
-          cmd_options: '-a'
+          cmd_options: '-a -x report_xml.xml'
         continue-on-error: true
 
       - name: List files in workspace
         run: ls -la /home/runner/work/juice-shop/juice-shop
+        continue-on-error: true
 
       - name: Find ZAP reports
         run: find /home/runner/work/juice-shop/juice-shop -type f
+        continue-on-error: true
 
       - name: Upload ZAP Reports
         uses: actions/upload-artifact@v4
@@ -67,8 +69,11 @@ jobs:
             report_html.html
             report_json.json
             report_md.md
+            report_xml.xml
+        continue-on-error: true
 
       - name: Publish ZAP JUnit Report
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: report_xml.xml
+        continue-on-error: true
