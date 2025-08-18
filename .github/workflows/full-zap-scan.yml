@@ -1,4 +1,5 @@
-name: ZAP Full Scan on Juice Shop (Optie A + JUnit)
+name: Full ZAP Scan
+# on Juice Shop (Optie A + JUnit)
 
 on:
   push:
