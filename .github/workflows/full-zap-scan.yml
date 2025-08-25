@@ -44,7 +44,8 @@ jobs:
 
       # Fix permissions so ZAP can write its reports
       - name: Fix permissions for ZAP output
-        run: sudo chmod -R 777 /home/runner/work/juice-shop/juice-shop
+        run: sudo chmod -R 777 $GITHUB_WORKSPACE
+        #run: sudo chmod -R 777 /home/runner/work/juice-shop/juice-shop
 
       - name: Run ZAP Full Scan (HTML + JUnit XML)
         uses: zaproxy/action-full-scan@v0.12.0
