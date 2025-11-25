@@ -1,22 +1,10 @@
-name: Reusable DAST Workflow
+name: App Pipeline with Central DAST
 
 on:
-  workflow_call:
-    inputs:
-      dast-scan-tool: { type: string, required: true }
-      language:       { type: string, required: false }
-      project_dir:    { type: string, required: true }
-      environment:    { type: string, required: true }
-      start_command:  { type: string, required: false, default: "" }
-      website_target: { type: string, required: true }
-      # NEW: containerized target
-      service_image:  { type: string, required: false }
-      container_port: { type: number, required: false }
-      health_path:    { type: string, required: false, default: "/" }
-      env_json:       { type: string, required: false, default: "{}" }
-      scan_type:      { type: string, required: false, default: "baseline" }
-      cmd_options:    { type: string, required: false, default: "-x report_xml.xml" }
+  push:
+    branches: [ main ]
   workflow_dispatch:
+  pull_request:
 
 permissions:
   actions: read
@@ -24,18 +12,23 @@ permissions:
   security-events: write
 
 jobs:
-  ZAP-Scan:
-    if: ${{ inputs.dast-scan-tool == 'zap' }}
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/_21-dast-zap-workflow.yml
+  # Other jobs (SCA, SAST, build) go here...
+
+  DAST-ZAP:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/20-dast-workflow.yml@main
     with:
-      dast-scan-tool: ${{ inputs.dast-scan-tool }}
-      project_dir:    ${{ inputs.project_dir }}
-      environment:    ${{ inputs.environment }}
-      start_command:  ${{ inputs.start_command }}
-      website_target: ${{ inputs.website_target }}
-      service_image:  ${{ inputs.service_image }}
-      container_port: ${{ inputs.container_port }}
-      health_path:    ${{ inputs.health_path }}
-      env_json:       ${{ inputs.env_json }}
-      scan_type:      ${{ inputs.scan_type }}
-      cmd_options:    ${{ inputs.cmd_options }}
+      dast-scan-tool: zap
+      project_dir: ./                       # not used by DAST if scanning a container
+      environment: non-prod
+      # start_command can be empty when scanning a service container
+      start_command: ""
+      # Target the service hostname 'app' (set inside the reusable workflow)
+      website_target: "http://app:3000"
+      # NEW inputs (see step 2 below):
+      service_image: "bkimminich/juice-shop:latest"
+      container_port: 3000
+      health_path: "/"
+      env_json: "{}"
+      scan_type: "baseline"                 # or "full"
+      cmd_options: "-a -x report_xml.xml"   # baseline: add -a for some active probes
+    secrets: inherit
