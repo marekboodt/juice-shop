@@ -15,7 +15,7 @@ jobs:
   # Other jobs (SCA, SAST, build) go here...
 
   DAST-ZAP:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/20-dast-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/test-20-dast-workflow.yml@main
     with:
       dast-scan-tool: zap
       project_dir: ./                       # not used by DAST if scanning a container
