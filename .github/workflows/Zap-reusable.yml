@@ -1,4 +1,4 @@
-name: Reusable Zap Scan to other Repo
+name: Reusable DAST Scan to other Repo (options: ZAP)
 
 on:
   push:
@@ -29,6 +29,6 @@ jobs:
       container_port: 3000
       health_path: "/"
       env_json: "{}"
-      scan_type: "baseline"                 # or "full"
+      scan_type: "full"                 # "baseline" or "full"
       cmd_options: "-a -x report_xml.xml"   # baseline: add -a for some active probes
     secrets: inherit
