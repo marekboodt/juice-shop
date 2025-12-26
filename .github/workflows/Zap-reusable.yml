@@ -1,4 +1,4 @@
-name: App Pipeline with Central DAST
+name: Reusable Zap Scan to other Repo
 
 on:
   push:
