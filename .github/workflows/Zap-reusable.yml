@@ -1,4 +1,4 @@
-name: Reusable DAST Scan to other Repo (options: ZAP)
+name: Reusable DAST Scan to other Repo option zap
 
 on:
   push:
