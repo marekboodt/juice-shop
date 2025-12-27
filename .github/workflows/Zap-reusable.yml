@@ -31,5 +31,5 @@ jobs:
       env_json: "{}"
       scan_type: "full"                 # "baseline" or "full"
       # cmd_options: "-a -j -x report_xml.xml -n .zap/zap.context"
-      cmd_options: "-a -j -r report_html.html -x report_xml.xml -n .zap/zap.context"  # baseline: add -a for some active probes
+      cmd_options: "-a -j -r report_html.html -x report_xml.xml -n zap.context"  # baseline: add -a for some active probes
     secrets: inherit
