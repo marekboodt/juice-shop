@@ -25,10 +25,11 @@ jobs:
       # start_command can be empty when scanning a service container
       start_command: ""
       # Target the service hostname 'app' (set inside the reusable workflow)
-      website_target: "http://app:3000"
+      website_target: "https://juice-shop.herokuapp.com"  # website test
+      # website_target: "http://app:3000"                 # container test.
       # NEW inputs (see step 2 below):
-      service_image: "bkimminich/juice-shop:latest"
-      container_port: 3000
+      service_image: ""                                   # bkimminich/juice-shop:latest
+      container_port: ""                                  # 3000 for  bkimminich/juice-shop:latest
       health_path: "/"
       env_json: "{}"
       scan_type: "full"                 # "baseline" or "full"
