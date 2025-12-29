@@ -1,1 +1,37 @@
+name: Container App - Reusable DAST Scan to other Repo option zap
 
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: '0 1 * * 2'   # Tuesday at 01:00 UTC
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  # Other jobs (SCA, SAST, build) go here...
+
+  DAST-ZAP:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/20-dast-workflow.yml@main
+    with:
+      dast-scan-tool: zap
+      project_dir: ./                       # not used by DAST if scanning a container
+      environment: non-prod
+      # start_command can be empty when scanning a service container
+      start_command: ""
+      # Target the service hostname 'app' (set inside the reusable workflow)
+      # website_target: "https://juice-shop.herokuapp.com"  # website test
+      website_target: "http://app:3000"                 # container test.
+      # NEW inputs (see step 2 below):
+      service_image: ""                                   # bkimminich/juice-shop:latest
+      container_port: 3000                                # 3000 for  bkimminich/juice-shop:latest - add # if container option is not used. 
+      health_path: "/"
+      env_json: "{}"
+      scan_type: "full"                 # "baseline" or "full"
+      cmd_options: "-a -j -r report_html.html -x report_xml.xml" # baseline: add -a for some active probes
+    secrets: inherit
