@@ -28,7 +28,7 @@ jobs:
       # website_target: "https://juice-shop.herokuapp.com"  # website test
       website_target: "http://app:3000"                 # container test.
       # NEW inputs (see step 2 below):
-      service_image: ""                                   # bkimminich/juice-shop:latest
+      service_image: "bkimminich/juice-shop:latest"       # bkimminich/juice-shop:latest
       container_port: 3000                                # 3000 for  bkimminich/juice-shop:latest - add # if container option is not used. 
       health_path: "/"
       env_json: "{}"
